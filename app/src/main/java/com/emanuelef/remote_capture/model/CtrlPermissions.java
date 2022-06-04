@@ -68,7 +68,7 @@ public class CtrlPermissions {
         String serialized = mPrefs.getString(PREF_NAME, "");
         //Log.d(TAG, serialized);
 
-        if(!serialized.isEmpty()) {
+        if (!serialized.isEmpty()) {
             JsonObject obj = JsonParser.parseString(serialized).getAsJsonObject();
             deserialize(obj);
         } else
@@ -79,17 +79,18 @@ public class CtrlPermissions {
         mRules.clear();
 
         JsonObject rules = object.getAsJsonObject("rules");
-        if(rules == null)
+        if (rules == null)
             return;
 
-        for(Map.Entry<String, JsonElement> rule: rules.entrySet()) {
-            if(rule.getValue().isJsonPrimitive() && rule.getValue().getAsJsonPrimitive().isString()) {
+        for (Map.Entry<String, JsonElement> rule : rules.entrySet()) {
+            if (rule.getValue().isJsonPrimitive() && rule.getValue().getAsJsonPrimitive().isString()) {
                 String val = rule.getValue().getAsJsonPrimitive().getAsString();
 
                 try {
                     ConsentType tp = ConsentType.valueOf(val);
                     mRules.put(rule.getKey(), new Rule(rule.getKey(), tp));
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
             }
         }
     }
@@ -100,7 +101,7 @@ public class CtrlPermissions {
             JsonObject result = new JsonObject();
             JsonObject rulesObj = new JsonObject();
 
-            for(Rule rule: src.mRules.values()) {
+            for (Rule rule : src.mRules.values()) {
                 rulesObj.add(rule.package_name, new JsonPrimitive(rule.consent.toString()));
             }
 
@@ -145,9 +146,10 @@ public class CtrlPermissions {
     }
 
     public ConsentType getConsent(String package_name) {
-        Rule rule = mRules.get(package_name);
-        if(rule == null)
-            return ConsentType.UNSPECIFIED;
-        return rule.consent;
+//        Rule rule = mRules.get(package_name);
+//        if(rule == null)
+//            return ConsentType.UNSPECIFIED;
+//        return rule.consent;
+        return ConsentType.ALLOW;
     }
 }

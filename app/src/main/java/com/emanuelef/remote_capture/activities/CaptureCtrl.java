@@ -69,20 +69,20 @@ public class CaptureCtrl extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         // Important: calls must occur in the following order:
         //  requestWindowFeature -> setContentView -> getInsetsController()
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.ctrl_consent);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            final WindowInsetsController insetsController = getWindow().getInsetsController();
-            if (insetsController != null)
-                insetsController.hide(WindowInsets.Type.statusBars());
-        } else {
-            getWindow().setFlags(
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN
-            );
-        }
-        getWindow().addFlags(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        setContentView(R.layout.ctrl_consent);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            final WindowInsetsController insetsController = getWindow().getInsetsController();
+//            if (insetsController != null)
+//                insetsController.hide(WindowInsets.Type.statusBars());
+//        } else {
+//            getWindow().setFlags(
+//                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+//            );
+//        }
+//        getWindow().addFlags(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onCreate(savedInstanceState);
 
         mCapHelper = new CaptureHelper(this);
@@ -99,43 +99,51 @@ public class CaptureCtrl extends AppCompatActivity {
             abort();
             return;
         }
+        // 睡眠一会等待APP启动
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+        processRequest(intent, action);
 
         // Check if a control permission rule was set
-        mPermissions = PCAPdroid.getInstance().getCtrlPermissions();
-        AppDescriptor app = getCallingApp();
-        if(app != null) {
-            CtrlPermissions.ConsentType consent = mPermissions.getConsent(app.getPackageName());
-
-            if(consent == CtrlPermissions.ConsentType.ALLOW) {
-                processRequest(intent, action);
-                return;
-            } else if(consent == CtrlPermissions.ConsentType.DENY) {
-                abort();
-                return;
-            }
-        }
-
-        if(isControlApp(action)) {
-            processRequest(intent, action);
-            return;
-        }
-
-        // Show authorization window
-        findViewById(R.id.allow_btn).setOnClickListener(v -> controlAction(intent, action, true));
-        findViewById(R.id.deny_btn).setOnClickListener(v -> controlAction(intent, action, false));
-
-        if(app != null) {
-            ((TextView)findViewById(R.id.app_name)).setText(app.getName());
-            ((TextView)findViewById(R.id.app_package)).setText(app.getPackageName());
-            ((ImageView)findViewById(R.id.app_icon)).setImageDrawable(app.getIcon());
-        } else
-            findViewById(R.id.caller_app).setVisibility(View.GONE);
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    Button btn = findViewById(R.id.allow_btn);
-                    btn.setTextColor(0xFF0099CC);
-                    btn.setEnabled(true);
-                }, 1500);
+//        mPermissions = PCAPdroid.getInstance().getCtrlPermissions();
+//        AppDescriptor app = getCallingApp();
+//        if(app != null) {
+//            CtrlPermissions.ConsentType consent = mPermissions.getConsent(app.getPackageName());
+//
+//            if(consent == CtrlPermissions.ConsentType.ALLOW) {
+//                processRequest(intent, action);
+//                return;
+//            } else if(consent == CtrlPermissions.ConsentType.DENY) {
+//                abort();
+//                return;
+//            }
+//        }
+//
+//        if(isControlApp(action)) {
+//            processRequest(intent, action);
+//            return;
+//        }
+//
+//        // Show authorization window
+//        findViewById(R.id.allow_btn).setOnClickListener(v -> controlAction(intent, action, true));
+//        findViewById(R.id.deny_btn).setOnClickListener(v -> controlAction(intent, action, false));
+//
+//        if(app != null) {
+//            ((TextView)findViewById(R.id.app_name)).setText(app.getName());
+//            ((TextView)findViewById(R.id.app_package)).setText(app.getPackageName());
+//            ((ImageView)findViewById(R.id.app_icon)).setImageDrawable(app.getIcon());
+//        } else
+//            findViewById(R.id.caller_app).setVisibility(View.GONE);
+//
+//        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+//                    Button btn = findViewById(R.id.allow_btn);
+//                    btn.setTextColor(0xFF0099CC);
+//                    btn.setEnabled(true);
+//                }, 1500);
     }
 
     private AppDescriptor getCallingApp() {
@@ -190,7 +198,7 @@ public class CaptureCtrl extends AppCompatActivity {
 
     private void processRequest(Intent req_intent, @NonNull String action) {
         Intent res = new Intent();
-        Utils.showToast(this, R.string.ctrl_consent_allowed);
+        // Utils.showToast(this, R.string.ctrl_consent_allowed);
 
         if(action.equals(ACTION_START)) {
             mStarterApp = getCallingApp();
