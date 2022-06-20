@@ -181,7 +181,7 @@
             app:title="@string/ipv6"
             app:iconSpaceReserved="false"
             app:summary="@string/enable_ipv6_summary"
-            app:defaultValue="false" />
+            app:defaultValue="true" />
 
         <Preference
             app:key="control_permissions"

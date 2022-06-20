@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_CLIPS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="com.pcapdroid.permission.MITM" android:required="false"/>
 
@@ -29,6 +30,7 @@
         android:theme="@style/AppTheme"
         android:allowBackup="true"
         android:fullBackupContent="true"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:label"
         tools:targetApi="m">
 
